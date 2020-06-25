@@ -96,6 +96,9 @@ class contenttype extends \core_contentbank\contenttype {
         return [
             // Add the plugins features here.
             self::CAN_EDIT,
+            // Exercise 3: add upload feature.
+            self::CAN_UPLOAD,
+            // ----
         ];
     }
 
@@ -109,6 +112,9 @@ class contenttype extends \core_contentbank\contenttype {
     public function get_manageable_extensions(): array {
         return [
             // Add your file extensions here.
+            // Exercise 3: add upload feature.
+            '.html',
+            // ----
         ];
     }
 
