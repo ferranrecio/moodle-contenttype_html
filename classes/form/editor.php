@@ -65,7 +65,15 @@ class editor extends edit_content {
         if ($id) {
             $record = $DB->get_record('contentbank_content', ['id' => $id]);
             $content = new content($record);
-            $fullcontent = $content->get_configdata() ?? '';
+            // Exercise 2: use a public file instead of configdata.
+            // Original code from exercise 1:
+            // $fullcontent = $content->get_configdata() ?? '';
+            // Solution:
+            $fullcontent =  '';
+            $file = $content->get_file();
+            if ($file) {
+                $fullcontent = $file->get_content();
+            }
             $name = $content->get_name();
         }
 
@@ -122,8 +130,40 @@ class editor extends edit_content {
 
         // Update content.
         $content->set_name($data->name);
-        $content->set_configdata($data->fullcontent);
-        $content->update_content();
+        // Exercise 2: use public file instead of configdata
+        // Original code from exercise 1:
+        // $content->set_configdata($data->fullcontent);
+        // $content->update_content();
+        // Solution:
+        $fs = get_file_storage();
+        $originalfile = $content->get_file();
+        if ($originalfile) {
+            // If we have an original file we need to replace it with another stored_file.
+            $filerecord = [
+                'contextid' => context_user::instance($USER->id)->id,
+                'component' => 'user',
+                'filearea' => 'draft',
+                'itemid' => file_get_unused_draft_itemid(),
+                'filepath' => '/',
+                'filename' => clean_param($data->name, PARAM_FILE).'.html',
+                'timecreated' => time(),
+            ];
+            $file = $fs->create_file_from_string($filerecord, $data->fullcontent);
+            $originalfile->replace_file_with($file);
+        } else {
+            // If it is a new content we need to create the public file
+            $filerecord = [
+                'contextid' => $content->get_contextid(),
+                'component' => 'contentbank',
+                'filearea' => 'public',
+                'itemid' => $content->get_id(),
+                'filepath' => '/',
+                'filename' => clean_param($data->name, PARAM_FILE).'.html',
+                'timecreated' => time(),
+            ];
+            $fs->create_file_from_string($filerecord, $data->fullcontent);
+        }
+        // ----
 
         return $content->get_id();
     }
