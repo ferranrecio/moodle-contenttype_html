@@ -55,8 +55,16 @@ class contenttype extends \core_contentbank\contenttype {
 
         $html = '';
 
-        $configdata = $content->get_configdata();
-        $html .= format_text($configdata);
+        // EXERCISE 2: we stop using configdata and start using the public file
+        // Original code from exercise 1:
+        // $configdata = $content->get_configdata();
+        // $html .= format_text($configdata);
+        // Solution:
+        $file = $content->get_file();
+        if ($file) {
+            $html = $file->get_content();
+        }
+        // ----
 
         return $html;
     }
@@ -93,6 +101,9 @@ class contenttype extends \core_contentbank\contenttype {
         return [
             // Add the plugins features here.
             self::CAN_EDIT,
+            // Exercise 2: add upload feature.
+            self::CAN_UPLOAD,
+            // ----
         ];
     }
 
@@ -106,6 +117,9 @@ class contenttype extends \core_contentbank\contenttype {
     public function get_manageable_extensions(): array {
         return [
             // Add your file extensions here.
+            // Exercise 2: add upload feature.
+            '.html',
+            // ----
         ];
     }
 
