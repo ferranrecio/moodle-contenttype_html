@@ -125,8 +125,28 @@ class editor extends edit_content {
 
         // Update content.
         $content->set_name($data->name);
-        $content->set_configdata($data->fullcontent);
-        $content->update_content();
+        // Exercise 4 step 1: as we need to generate an HTML file, we don't
+        // need to set configdata update_content anymore.
+        // $content->set_configdata($data->fullcontent);
+        // $content->update_content();
+
+        // Exercise 4 step 1: Update or create public file.
+        // Solution:
+        $filerecord = [
+            'contextid' => context_user::instance($USER->id)->id,
+            'component' => 'user',
+            'filearea' => 'draft',
+            'itemid' => file_get_unused_draft_itemid(),
+            'filepath' => '/',
+            'filename' => clean_param($data->name, PARAM_FILE).'.html',
+            'timecreated' => time(),
+        ];
+        $fs = get_file_storage();
+        $file = $fs->create_file_from_string($filerecord, $data->fullcontent);
+        $content->import_file($file);
+        // ----
+
+
 
         return $content->get_id();
     }
