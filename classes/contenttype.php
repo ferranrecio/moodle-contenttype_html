@@ -144,6 +144,22 @@ class contenttype extends \core_contentbank\contenttype {
                 'typeeditorparams' => 'template=none',
             ],
             // ----
+            // EXERCISE 2 step 1: add plain text title and plain text option.
+            // Solution:
+            (object)[
+                // Adding a title to separate this element from the HTML.
+                'key' => 'templates',
+                'typename' => get_string('templates', 'contenttype_html'),
+                'typeicon' => $OUTPUT->image_url('f/html-64', 'moodle')->out(false),
+            ],
+            (object)[
+                // Adding a title to separate this element from the HTML.
+                'key' => 'template1',
+                'typename' => get_string('template1_name', 'contenttype_html'),
+                'typeicon' => $OUTPUT->image_url('f/text-64', 'moodle')->out(false),
+                'typeeditorparams' => 'template=syllabus',
+            ],
+            // ----
         ];
 
         return $types;
