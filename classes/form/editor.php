@@ -69,6 +69,18 @@ class editor extends edit_content {
             $name = $content->get_name();
         }
 
+        // Exercise 1 step 2: adding templates.
+        $template = optional_param('template', 'none', PARAM_ALPHANUM);
+        if (empty($fullcontent) && $template && $template!= 'none') {
+            try {
+                $fullcontent = $OUTPUT->render_from_template("contenttype_html/{$template}", []);
+            } catch (moodle_exception $e) {
+                $notice = get_string('cannotloadtemplate', 'contenttype_html', $template);
+                $mform->addElement('static', null, '', $OUTPUT->notification($notice));
+            }
+        }
+        // ----
+
         // Content name.
         $mform->addElement('text', 'name', get_string('name'));
         $mform->setType('name', PARAM_TEXT);
