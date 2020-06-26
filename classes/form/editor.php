@@ -62,13 +62,22 @@ class editor extends edit_content {
         $fullcontent = '';
         $name = '';
 
-        // EXERCISE 1 step 4: Add code to edit existing content
-        // Solution:
         if ($id) {
             $record = $DB->get_record('contentbank_content', ['id' => $id]);
             $content = new content($record);
             $fullcontent = $content->get_configdata() ?? '';
             $name = $content->get_name();
+        }
+
+        // Exercise 1 step 2: adding templates.
+        $template = optional_param('template', 'none', PARAM_ALPHANUM);
+        if (empty($fullcontent) && $template && $template!= 'none') {
+            try {
+                $fullcontent = $OUTPUT->render_from_template("contenttype_html/{$template}", []);
+            } catch (moodle_exception $e) {
+                $notice = get_string('cannotloadtemplate', 'contenttype_html', $template);
+                $mform->addElement('static', null, '', $OUTPUT->notification($notice));
+            }
         }
         // ----
 
