@@ -63,6 +63,14 @@ class editor extends edit_content {
         $name = '';
 
         // EXERCISE 1 step 4: Add code to edit existing content
+        // Solution:
+        if ($id) {
+            $record = $DB->get_record('contentbank_content', ['id' => $id]);
+            $content = new content($record);
+            $fullcontent = $content->get_configdata() ?? '';
+            $name = $content->get_name();
+        }
+        // ----
 
         // Content name.
         $mform->addElement('text', 'name', get_string('name'));

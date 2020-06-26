@@ -56,6 +56,10 @@ class contenttype extends \core_contentbank\contenttype {
         $html = '';
 
         // EXERCISE 1 step 3: display the HTML stored in the content configdata.
+        // Solution:
+        $configdata = $content->get_configdata();
+        $html .= format_text($configdata);
+        // ----
 
         return $html;
     }
@@ -132,6 +136,14 @@ class contenttype extends \core_contentbank\contenttype {
         $types = [
             // EXERCISE 1 step 1: get the html content types available. Add a new option to store
             // HTML content into the content bank.
+            // Solution:
+            (object)[
+                'key' => 'html',
+                'typename' => get_string('pluginname', 'contenttype_html'),
+                'typeicon' => $OUTPUT->image_url('f/html-64', 'moodle')->out(false),
+                'typeeditorparams' => 'template=none',
+            ],
+            // ----
         ];
 
         return $types;
